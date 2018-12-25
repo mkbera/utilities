@@ -5,7 +5,7 @@ parallel programs
 -----------------
 Use: Run a number of programs in parallel. See example in `test_parallel_prog.py`.
 ```python
-from utilities.parallel_prog import run_parallel_progs as RPP
+from utilities.parallel_prog import run_parallel_progs as RPPIP
 
 cmd_list = ['python prog1.py --arg1_1 <arg1_1v1>',
   'python prog1.py --arg1 <arg1_1v2>',
@@ -34,3 +34,5 @@ task_list = [task1, task2, task3] # example task_list
  RPFIP(task_list, n_proc) # cmd_list = a list of dictionaries; each dictionaty has a function and its arguments
   # n_proc = number of processors on the system
 ```
+
+The commands/functions are parallelized using multi-processing. Another way to parallelize would be to use multi-threading. But it was observed that parallelizing through multi-threading is slower than that of multi-threading (marginally slow in case of parallel functions; very slow, even slower than sequential running, in case of parallel programs).
