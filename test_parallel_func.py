@@ -1,23 +1,24 @@
-from utilities.parallel_func import run_parallel_funcs
+from utilities.parallel_func import run_parallel_funcs_in_threads as RPFIT, run_parallel_funcs_in_processes as RPFIP
 import os
+import time
 
-NUM = 1000000
+NUM = 10000000
+TASKS = 10
+N_PROC = 10
 
 
 def my_func (args):
 	num1 = args[0]
 	num2 = args[1]
 	num = num1 + num2
-	my_list = []
+	ans = 0
 	for i in range(num):
-		my_list.append(i)
+		ans += i
+	return ans
 
-
-def parallel(n_proc):
-
+def parallel_threads(n_proc):
 	task_list = []
-
-	for i in range(20):
+	for i in range(TASKS):
 		num1 = NUM
 		num2 = NUM
 		args = [num1, num2]
@@ -26,21 +27,43 @@ def parallel(n_proc):
 			'arguments': args,
 		}
 		task_list.append(task)
-
-	# n_proc = 4
-
-	run_parallel_funcs(task_list, n_proc)
+	RPFIT(task_list, n_proc, verbose=False)
 
 
-def sequential():
-	for i in range(20):
+def parallel_processes(n_proc):
+	task_list = []
+	for i in range(TASKS):
 		num1 = NUM
 		num2 = NUM
 		args = [num1, num2]
-		print(i)
-		my_func(args)
+		task = {
+			'function': my_func,
+			'arguments': args,
+		}
+		task_list.append(task)
+	RPFIP(task_list, n_proc, verbose=False)
 
 
-# sequential()
+def sequential():
+	for i in range(TASKS):
+		num1 = NUM
+		num2 = NUM
+		args = [num1, num2]
+		# print(i)
+		ans = my_func(args)
 
-# parallel(10)
+
+start = time.time()
+sequential()
+end = time.time()
+print('sequential = ', end-start)
+
+start = time.time()
+parallel_threads(N_PROC)
+end = time.time()
+print('parallel_threads = ', end-start)
+
+start = time.time()
+parallel_processes(N_PROC)
+end = time.time()
+print('parallel_processes = ', end-start)
