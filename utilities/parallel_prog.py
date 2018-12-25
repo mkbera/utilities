@@ -1,32 +1,31 @@
 import os
 import threading
 from threading import Thread
+from multiprocessing import Process
+import multiprocessing
+import time
 
 '''
 TODO: the main thread keeps one core busy; resolve this issue
 '''
 
-def run_parallel_progs(cmd_list, n_processes):
-	flag = [n_processes]
-	lock = threading.Lock()
-
+def run_parallel_progs_in_threads(cmd_list, n_procs, verbose=False):
+	flag = [False for i in range(n_procs)]
 	threads = []
 	thread_count = 0
 	for cmd in cmd_list:
 		while(True):
-			lock.acquire()
-			if flag[0] < 0:
-				print('*** FLAG less than 0: ERROR ***')
-				exit()
-			if flag[0] == 0:
-				lock.release()
+			free_thread_id = -1
+			for i in range(n_procs):
+				if not flag[i]:
+					free_thread_id = i
+
+			if free_thread_id == -1:
 				continue
 			else:
-				flag[0] += -1
-				lock.release()
-				t =Thread(target=_thread_task, args=(cmd, lock, flag,), name = '{}'.format(thread_count))
+				flag[free_thread_id] = True
+				t =Thread(target=_thread_task, args=(cmd, flag, free_thread_id, verbose, ), name = '{}'.format(thread_count))
 				threads.append(t)
-				print('thread start with thread id = {}'.format(thread_count))
 				thread_count += 1
 				t.start()
 				break
@@ -35,10 +34,59 @@ def run_parallel_progs(cmd_list, n_processes):
 		t.join()
 
 
-def _thread_task(cmd, lock, flag):
+def _thread_task(cmd, flag, thread_id, verbose):
+	name = threading.current_thread().name
+	if verbose:
+		print('thread start with thread number = {}'.format(name))
+
 	os.system(cmd)
 
-	lock.acquire()
-	flag[0] += 1
-	print('thread completed with thread id = {}'.format(threading.current_thread().name))
-	lock.release()
+	if verbose:
+		print('thread completed with thread number = {}'.format(name))
+	flag[thread_id] = False
+
+
+def run_parallel_progs_in_processes(cmd_list, n_procs, verbose=False):
+	flag = [False for i in range(n_procs)]
+	processes = []
+	process_count = 0
+	for cmd in cmd_list:
+		while(True):
+			free_process_id = -1
+			for i in range(n_procs):
+				if not flag[i]:
+					free_process_id = i
+
+			if free_process_id == -1:
+				continue
+			else:
+				flag[free_process_id] = True
+				p =Process(target=_process_task, args=(cmd, flag, free_process_id, verbose, ), name ='{}'.format(process_count))
+				processes.append(p)
+				process_count += 1
+				p.start()
+				break
+
+	for p in processes:
+		p.join()
+
+
+def _process_task(cmd, flag, process_id, verbose):
+	name = multiprocessing.current_process().name
+	if verbose:
+		print('process start with process number = {}'.format(name))
+
+	os.system(cmd)
+
+	if verbose:
+		print('process completed with process number = {}'.format(name))
+	flag[process_id] = False
+
+
+def run_sequential_progs(cmd_list, verbose=False):
+	cmd_count = 0
+	for cmd in cmd_list:
+		os.system(cmd)
+		if verbose:
+			print('finished: command number =', cmd_count)
+		cmd_count += 1

@@ -1,6 +1,12 @@
 import time
+import argparse
 
-SIZE = 50000000
+parser = argparse.ArgumentParser()
+parser.add_argument('--size', type=int, default=None)
+args = parser.parse_args()
+
+SIZE = args.size
+assert(SIZE is not None)
 
 def my_func ():
 	num = SIZE
@@ -15,7 +21,5 @@ def add ():
 		ans += i
 
 start = time.time()
-# my_func()
-
+add()
 end = time.time()
-print('TIME', end - start)

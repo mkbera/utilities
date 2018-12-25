@@ -1,11 +1,28 @@
-from utilities.parallel_prog import run_parallel_progs
+from utilities.parallel_prog import run_parallel_progs_in_threads as RPPIT,\
+	run_parallel_progs_in_processes as RPPIP, run_sequential_progs as RSP
+import time
 
+SIZE = 20000000
+N_PROC = 10
+TASKS = 10
 
 cmd_list = []
+for i in range(TASKS):
+	cmd_list.append('python sleep.py --size {}'.format(SIZE))
 
-for i in range(20):
-	cmd_list.append('python sleep.py')
+n_proc = N_PROC
 
-n_proc = 4
+start = time.time()
+RSP(cmd_list)
+end = time.time()
+print('sequential =', end - start)
 
-run_parallel_progs(cmd_list, n_proc)
+start = time.time()
+RPPIT(cmd_list, n_proc)
+end = time.time()
+print('parallel threads =', end - start)
+
+start = time.time()
+RPPIP(cmd_list, n_proc)
+end = time.time()
+print('parallel processes =', end - start)
