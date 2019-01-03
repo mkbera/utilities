@@ -35,4 +35,4 @@ task_list = [task1, task2, task3] # example task_list
   # n_proc = number of processors on the system
 ```
 
-The commands/functions are parallelized using multi-processing. Another way to parallelize would be to use multi-threading. But it was observed that parallelizing through multi-threading is slower than that of multi-threading (marginally slow in case of parallel functions; very slow, even slower than sequential running, in case of parallel programs).
+The commands/functions are parallelized using multi-processing. Another way to parallelize would be to use multi-threading. But it was observed that parallelizing through multi-threading is slower than that of multi-processing (marginally slow in case of parallel programs; very slow, even slower than sequential running, in case of parallel functions).
