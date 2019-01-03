@@ -5,7 +5,7 @@ parallel programs
 -----------------
 Use: Run a number of programs in parallel. See example in `test_parallel_prog.py`.
 ```python
-from utilities.parallel_prog import run_parallel_progs as RPPIP
+from utilities.parallel_prog import run_parallel_progs_in_processes as RPPIP
 
 cmd_list = ['python prog1.py --arg1_1 <arg1_1v1>',
   'python prog1.py --arg1 <arg1_1v2>',
