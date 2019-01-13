@@ -1,5 +1,5 @@
 # utilities
-a number of python scripts that make life easier
+These python scripts help you run programs/functions concurrently. Executing too many programs/functions/threads puts a lot of load on the memory. All the programs keep thrashing each other out of the processor cores. These scripts help you specify the number of processes that you wish to execute concurrently at any given moment on the machine.
 
 parallel programs
 -----------------
