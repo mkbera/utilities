@@ -2,18 +2,12 @@ import sys
 sys.path.append('../')
 from utilities.parallel_func import run_parallel_funcs_in_threads as RPFIT,\
 	run_parallel_funcs_in_processes as RPFIP, run_sequential_funcs as RSF
+import os
 import time
-import argparse
 
-parser = argparse.ArgumentParser()
-parser.add_argument('--size', type=int, default=100)
-parser.add_argument('--procs', type=int, default=2)
-parser.add_argument('--tasks', type=int, default=2)
-args = parser.parse_args()
-
-SIZE = args.size
-N_PROC = args.procs
-TASKS = args.tasks
+NUM = 1000000
+TASKS = 40
+N_PROC = 10
 
 
 def my_func (args):
@@ -39,17 +33,14 @@ for i in range(TASKS):
 start = time.time()
 RSF(task_list)
 end = time.time()
-# print('sequential = ', end-start)
-print(end-start)
+print('sequential = ', end-start)
 
 start = time.time()
 RPFIT(task_list, N_PROC)
 end = time.time()
-# print('parallel_threads = ', end-start)
-print(end-start)
+print('parallel_threads = ', end-start)
 
 start = time.time()
 RPFIP(task_list, N_PROC)
 end = time.time()
-# print('parallel_processes = ', end-start)
-print(end-start)
+print('parallel_processes = ', end-start)
