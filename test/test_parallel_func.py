@@ -1,10 +1,12 @@
+import sys
+sys.path.append('../')
 from utilities.parallel_func import run_parallel_funcs_in_threads as RPFIT,\
 	run_parallel_funcs_in_processes as RPFIP, run_sequential_funcs as RSF
 import os
 import time
 
-NUM = 10000000
-TASKS = 10
+NUM = 1000000
+TASKS = 40
 N_PROC = 10
 
 

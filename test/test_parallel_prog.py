@@ -1,10 +1,12 @@
+import sys
+sys.path.append('../')
 from utilities.parallel_prog import run_parallel_progs_in_threads as RPPIT,\
 	run_parallel_progs_in_processes as RPPIP, run_sequential_progs as RSP
 import time
 
-SIZE = 20000000
+SIZE = 200000
 N_PROC = 10
-TASKS = 10
+TASKS = 40
 
 cmd_list = []
 for i in range(TASKS):

@@ -1,7 +1,7 @@
 import os
 import threading
 from threading import Thread
-from multiprocessing import Process
+from multiprocessing import Process, Array
 import multiprocessing
 import time
 
@@ -49,20 +49,21 @@ def _thread_task(task, flag, thread_id, verbose):
 
 
 def run_parallel_funcs_in_processes(task_list, n_procs, verbose=False):
-	flag = [False for i in range(n_procs)]
+	# flag = [False for i in range(n_procs)]
+	flag = Array('i', n_procs)
 	processes = []
 	process_count = 0
 	for task in task_list:
 		while(True):
 			free_process_id = -1
 			for i in range(n_procs):
-				if not flag[i]:
+				if flag[i] == 0:
 					free_process_id = i
 
 			if free_process_id == -1:
 				continue
 			else:
-				flag[free_process_id] = True
+				flag[free_process_id] = 1
 				p =Process(target=_process_task, args=(task, flag, free_process_id, verbose, ), name ='{}'.format(process_count))
 				processes.append(p)
 				process_count += 1
@@ -84,7 +85,7 @@ def _process_task(task, flag, process_id, verbose):
 
 	if verbose:
 		print('process completed with process number = {}'.format(name))
-	flag[process_id] = False
+	flag[process_id] = 0
 
 
 def run_sequential_funcs (task_list, verbose=False):

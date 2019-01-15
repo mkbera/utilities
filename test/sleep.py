@@ -19,6 +19,7 @@ def add ():
 	ans = 0
 	for i in range(num):
 		ans += i
+	# print(ans)
 
 start = time.time()
 add()
